@@ -5,7 +5,7 @@ type ProgressCardProps = {
 
 const progressColor = (progress: number) => {
   if (progress < 15) return "bg-red-500";
-  else if (progress < 30) return "bg-orange-00";
+  else if (progress < 30) return "bg-orange-500";
   else if (progress < 75) return "bg-yellow-500";
   else if (progress < 90) return "bg-green-500";
   else return "bg-green-600";
