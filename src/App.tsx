@@ -4,8 +4,18 @@ import { AddGoalModal } from "./components/AddGoalModal";
 import type { Goal } from "./types/Goal";
 
 export default function App() {
-  const [goals, setGoals] = useState<Goal[]>([]);
+  const [goals, setGoals] = useState<Goal[]>([
+    { id: "1", name: "Learn TypeScript", progress: 40 },
+    { id: "2", name: "Build React Project", progress: 20 },
+  ]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const updateGoal = (id: string, data: Partial<Goal>) => {
+    setGoals(prev =>
+      prev.map(goal => goal.id === id ? { ...goal, ...data } : goal)
+    )
+  }
 
   const addGoal = (name: string, progress: number) => {
     setGoals((prev) => [
@@ -24,11 +34,11 @@ export default function App() {
         {goals.map((goal) => (
           <ProgressCard
             key={goal.id}
-            name={goal.name}
-            progress={goal.progress}
+            goal={goal}
             onDelete={() =>
               setGoals(goals.filter((g) => g.id !== goal.id))
             }
+            onUpdate={updateGoal}
           />
         ))}
 
