@@ -1,4 +1,14 @@
+import { ProgressCard } from "./components/ProgressCard";
+
 export default function App() {
+  const mockSkills = [
+    { name: "Learn React", progress: 20 },
+    { name: "Study Algorithms", progress: 50 },
+    { name: "Build Habit Tracker", progress: 10 },
+    { name: "Learn Rust", progress: 80 },
+    { name: "Master TypeScript", progress: 90 },
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 flex flex-col">
 
@@ -6,8 +16,10 @@ export default function App() {
         <h1 className="text-2xl font-bold">Skill Tracker</h1>
       </header>
 
-      <main className="flex-1 p-4">
-        <p className="text-gray-600">No skills yet. Start by adding one!</p>
+      <main className="flex-1 p-4 grid gap-3">
+        {mockSkills.map((skill) => (
+          <ProgressCard key={skill.name} name={skill.name} progress={skill.progress} />
+        ))}
       </main>
 
       <button
