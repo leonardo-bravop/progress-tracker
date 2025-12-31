@@ -20,9 +20,16 @@ export default function App() {
         <h1 className="text-2xl font-bold">Progress Tracker</h1>
       </header>
 
-      <main className="flex-1 p-4 grid gap-3">
+      <main className="p-4 flex flex-col gap-3">
         {goals.map((goal) => (
-          <ProgressCard key={goal.id} name={goal.name} progress={goal.progress} />
+          <ProgressCard
+            key={goal.id}
+            name={goal.name}
+            progress={goal.progress}
+            onDelete={() =>
+              setGoals(goals.filter((g) => g.id !== goal.id))
+            }
+          />
         ))}
 
         {goals.length === 0 && (
