@@ -1,4 +1,4 @@
-export type Skill = {
+export type ProgressItem = {
   id: string
   name: string
   description?: string
