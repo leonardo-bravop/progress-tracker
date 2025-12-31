@@ -13,7 +13,7 @@ const progressColor = (progress: number) => {
 
 export function ProgressCard({ name, progress = 0 }: ProgressCardProps) {
     return (
-        <div className="border p-3 rounded-lg bg-white shadow-sm flex flex-col gap-2">
+        <div className="h-fit border p-3 rounded-lg bg-white shadow-sm flex flex-col gap-2">
         <h3 className="font-medium text-lg">{name}</h3>
         <div className="h-2 bg-gray-200 rounded">
             <div
