@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { Goal } from "../types/Goal";
+import { calculateGoalProgress } from "../utils/progress";
 
 type ProgressCardProps = {
   goal: Goal;
@@ -18,14 +19,15 @@ const progressColor = (progress: number) => {
 export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(goal.name);
-  const [progress, setProgress] = useState(goal.progress);
 
   const toggleEdit = () => setEditing(!editing);
 
   const handleSave = () => {
-    onUpdate(goal.id, { name, progress });
+    onUpdate(goal.id, { name });
     toggleEdit();
   };
+
+  const progress = calculateGoalProgress(goal.objectives);
 
   const ViewMode = (
     <>
@@ -51,7 +53,7 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
 
       <div className="flex justify-between">
         <span className="text-sm text-gray-600">
-          {goal.progress}% complete
+          {progress}% complete
         </span>
         <button
             onClick={toggleEdit}
@@ -77,7 +79,7 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
         min={0}
         max={100}
         value={progress}
-        onChange={(e) => setProgress(Number(e.target.value))}
+        disabled
       />
 
       <div className="flex justify-between items-center text-sm">

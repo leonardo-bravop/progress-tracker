@@ -47,6 +47,7 @@ export function AddGoalModal({ isOpen, onClose, onAdd }: AddGoalModalProps) {
             max={100}
             value={progress}
             onChange={(e) => setProgress(Number(e.target.value))}
+            disabled
           />
         </div>
 

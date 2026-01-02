@@ -6,9 +6,33 @@ import type { Goal } from "./types/Goal";
 export default function App() {
   const [goals, setGoals] = useState<Goal[]>(() => {
     const stored = localStorage.getItem("goals");
+
     return stored ? JSON.parse(stored) : [
-      { id: "1", name: "Learn TypeScript", progress: 40 },
-      { id: "2", name: "Build React Project", progress: 20 },
+      {
+        id: "1",
+        name: "Learn TypeScript",
+        objectives: [{
+          id: crypto.randomUUID(),
+          name: "Objective 1.1",
+          progress: 50
+        }]
+      },
+      { 
+        id: "2",
+        name: "Build React Project",
+        objectives: [
+          {
+            id: crypto.randomUUID(),
+            name: "Objective 2.1",
+            progress: 85
+          },
+          {
+            id: crypto.randomUUID(),
+            name: "Objective 2.2",
+            progress: 95
+          }
+        ]
+      },
     ];
   });
 
@@ -24,10 +48,17 @@ export default function App() {
     )
   }
 
-  const addGoal = (name: string, progress: number) => {
+  const addGoal = (name: string) => {
     setGoals(prev => [
       ...prev,
-      { id: crypto.randomUUID(), name, progress }
+      { id: crypto.randomUUID(),
+        name,
+        objectives: [{
+          id: crypto.randomUUID(),
+          name: "Objective 1",
+          progress: 50
+        }]
+      }
     ])
   }
 
