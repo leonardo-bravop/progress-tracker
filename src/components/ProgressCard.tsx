@@ -42,6 +42,21 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
     );
   };
 
+  const addObjective = () => {
+    setObjectives(prev => [
+      ...prev,
+      {
+        id: crypto.randomUUID(),
+        name: `Objective ${prev.length + 1}`,
+        progress: 0,
+      },
+    ]);
+  };
+
+  const deleteObjective = (id: string) => {
+    setObjectives(prev => prev.filter(obj => obj.id !== id));
+  };
+
   const progress = calculateGoalProgress(goal.objectives);
 
   const ViewMode = (
@@ -114,7 +129,8 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
             <ObjectiveItem
               key={obj.id}
               objective={obj}
-              onUpdate={(id, progress) => updateObjective(id, progress)}
+              onUpdate={updateObjective}
+              onDelete={deleteObjective}
               isEditing={editing}
             />
           ))}

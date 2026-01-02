@@ -4,10 +4,11 @@ import { progressColor } from "../utils/progress";
 type ObjectiveItemProps = {
   objective: Objective;
   onUpdate: (id: string, progress: number) => void;
+  onDelete?: (id: string) => void;
   isEditing: boolean;
 };
 
-export function ObjectiveItem({ objective, onUpdate, isEditing }: ObjectiveItemProps) {
+export function ObjectiveItem({ objective, onUpdate, onDelete, isEditing }: ObjectiveItemProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onUpdate(objective.id, Number(e.target.value));
   };
@@ -18,30 +19,41 @@ export function ObjectiveItem({ objective, onUpdate, isEditing }: ObjectiveItemP
         <span className="text-sm font-normal truncate">
           {objective.name}
         </span>
-        <span className="text-xs text-gray-500">
-          {objective.progress}%
-        </span>
+        {isEditing && onDelete && (
+          <button
+            onClick={() => onDelete(objective.id)}
+            className="text-sm text-red-600 hover:text-red-800 cursor-pointer"
+          >
+            ✕
+          </button>
+        )}
       </div>
 
-      {
-        isEditing ? (
-          <input
-          type="range"
-          min={0}
-          max={100}
-          value={objective.progress}
-          onChange={handleChange}
-          className="my-1"
-        />
-        ) : (
-          <div className="my-2 h-2 bg-gray-200 rounded">
-            <div
-              className={`h-full ${progressColor(objective.progress)} rounded transition-all`}
-              style={{ width: `${objective.progress}%` }}
+      <div className="flex gap-2 w-full">
+        {
+          isEditing ? (
+            <input
+            type="range"
+            min={0}
+            max={100}
+            value={objective.progress}
+            onChange={handleChange}
+            className="my-1 w-full"
             />
-          </div>
-        )
-      }
+          ) : (
+            <div className="my-2 h-2 bg-gray-200 rounded w-full">
+              <div
+                className={`h-full ${progressColor(objective.progress)} rounded transition-all`}
+                style={{ width: `${objective.progress}%` }}
+                />
+            </div>
+          )
+        }
+
+        <span className="text-xs text-gray-500">
+            {objective.progress}%
+        </span>
+      </div>
     </div>
   );
 }
