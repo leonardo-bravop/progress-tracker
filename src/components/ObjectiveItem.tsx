@@ -1,11 +1,13 @@
 import type { Objective } from "../types/Objective";
+import { progressColor } from "../utils/progress";
 
 type ObjectiveItemProps = {
   objective: Objective;
   onUpdate: (id: string, progress: number) => void;
+  isEditing: boolean;
 };
 
-export function ObjectiveItem({ objective, onUpdate }: ObjectiveItemProps) {
+export function ObjectiveItem({ objective, onUpdate, isEditing }: ObjectiveItemProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onUpdate(objective.id, Number(e.target.value));
   };
@@ -21,15 +23,25 @@ export function ObjectiveItem({ objective, onUpdate }: ObjectiveItemProps) {
         </span>
       </div>
 
-      <input
-        type="range"
-        min={0}
-        max={100}
-        value={objective.progress}
-        onChange={handleChange}
-        className="h-[16px]"
-        style={{accentColor: "black"}}
-      />
+      {
+        isEditing ? (
+          <input
+          type="range"
+          min={0}
+          max={100}
+          value={objective.progress}
+          onChange={handleChange}
+          className="my-1"
+        />
+        ) : (
+          <div className="my-2 h-2 bg-gray-200 rounded">
+            <div
+              className={`h-full ${progressColor(objective.progress)} rounded transition-all`}
+              style={{ width: `${objective.progress}%` }}
+            />
+          </div>
+        )
+      }
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Goal } from "../types/Goal";
-import { calculateGoalProgress } from "../utils/progress";
+import { calculateGoalProgress, progressColor } from "../utils/progress";
 import { ObjectiveItem } from "./ObjectiveItem";
 
 type ProgressCardProps = {
@@ -12,14 +12,6 @@ type ProgressCardProps = {
     objectiveId: string,
     progress: number
   ) => void;
-};
-
-const progressColor = (progress: number) => {
-  if (progress < 15) return "bg-red-500";
-  else if (progress < 30) return "bg-orange-500";
-  else if (progress < 75) return "bg-yellow-500";
-  else if (progress < 90) return "bg-green-500";
-  else return "bg-green-600";
 };
 
 export function ProgressCard({ goal, onDelete, onUpdate, onObjectiveUpdate }: ProgressCardProps) {
@@ -37,8 +29,16 @@ export function ProgressCard({ goal, onDelete, onUpdate, onObjectiveUpdate }: Pr
 
   const ViewMode = (
     <>
-      <div className="flex justify-between items-center h-9">
-        <h3 className="font-medium text-lg truncate">{goal.name}</h3>
+      <div className="flex justify-between items-center h-9 gap-2">
+        {
+          editing ?
+            <input
+              className="border p-1 rounded h-9 w-full"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          : <h3 className="font-medium text-lg truncate">{goal.name}</h3>
+        }
 
         {onDelete && (
             <button
@@ -61,12 +61,32 @@ export function ProgressCard({ goal, onDelete, onUpdate, onObjectiveUpdate }: Pr
         <span className="text-sm text-gray-600">
           {progress}% complete
         </span>
-        <button
-            onClick={toggleEdit}
-            className="text-xs px-2 py-1 border rounded hover:bg-gray-100"
-        >
-          Edit
-        </button>
+
+        {
+          editing ? (
+             <div className="flex gap-2">
+              <button
+                className="px-2 py-1 text-xs border rounded hover:bg-gray-100"
+                onClick={toggleEdit}
+              >
+                Cancel
+              </button>
+
+              <button
+                className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
+                onClick={handleSave}
+              >
+                Save
+              </button>
+            </div>
+          ) : 
+            <button
+              onClick={toggleEdit}
+              className="text-xs px-2 py-1 border rounded hover:bg-gray-100"
+            >
+              Edit
+            </button>
+        }
       </div>
 
       <div className="mt-4">
@@ -74,61 +94,23 @@ export function ProgressCard({ goal, onDelete, onUpdate, onObjectiveUpdate }: Pr
 
         <div className="flex flex-col gap-2">
           {goal.objectives.map(obj => (
-          <ObjectiveItem
-            key={obj.id}
-            objective={obj}
-            onUpdate={(id, progress) =>
-              onObjectiveUpdate(goal.id, id, progress)
-            }
-          />
-        ))}
+            <ObjectiveItem
+              key={obj.id}
+              objective={obj}
+              onUpdate={(id, progress) =>
+                onObjectiveUpdate(goal.id, id, progress)
+              }
+              isEditing={editing}
+            />
+          ))}
         </div>
       </div>
     </>
   );
 
-  const EditMode = (
-    <div className="flex flex-col gap-3 w-full">
-      <input
-        className="border p-1 rounded h-9"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-
-      <input
-        className="h-[16px]"
-        type="range"
-        min={0}
-        max={100}
-        value={progress}
-        disabled
-      />
-
-      <div className="flex justify-between items-center text-sm">
-        <span>{progress}%</span>
-
-        <div className="flex gap-2">
-          <button
-            className="px-2 py-1 text-xs border rounded hover:bg-gray-100"
-            onClick={toggleEdit}
-          >
-            Cancel
-          </button>
-
-          <button
-            className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
-            onClick={handleSave}
-          >
-            Save
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-
   return (
     <div className="h-fit w-full border p-3 rounded-lg bg-white shadow-sm flex flex-col gap-2 relative">
-      {editing ? EditMode : ViewMode}
+      {ViewMode}
     </div>
   );
 }
