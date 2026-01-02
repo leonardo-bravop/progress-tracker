@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Goal } from "../types/Goal";
 import { calculateGoalProgress, progressColor } from "../utils/progress";
 import { ObjectiveItem } from "./ObjectiveItem";
+import type { Objective } from "../types/Objective";
 
 type ProgressCardProps = {
   goal: Goal;
@@ -31,13 +32,13 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
 
   const updateObjective = (
     objectiveId: string,
-    progress: number
+    data: Partial<Objective>
   ) => {
     setObjectives(prev =>
       prev.map(obj => {
        const isTargetObj = obj.id === objectiveId;
           if (!isTargetObj) return obj;
-          return { ...obj, progress };
+          return { ...obj, ...data };
       })
     );
   };
@@ -135,7 +136,7 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
           )}
         </div>
 
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-4">
           {objectives.map(obj => (
             <ObjectiveItem
               key={obj.id}

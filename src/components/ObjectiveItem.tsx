@@ -3,22 +3,41 @@ import { progressColor } from "../utils/progress";
 
 type ObjectiveItemProps = {
   objective: Objective;
-  onUpdate: (id: string, progress: number) => void;
+  onUpdate: (id: string, data: Partial<Objective>) => void;
   onDelete?: (id: string) => void;
   isEditing: boolean;
 };
 
 export function ObjectiveItem({ objective, onUpdate, onDelete, isEditing }: ObjectiveItemProps) {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onUpdate(objective.id, Number(e.target.value));
+  const updateObjective = (updatedObjective: Partial<Objective>) => {
+    onUpdate(objective.id, updatedObjective);
+  };
+  
+  const handleProgressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    updateObjective({ progress: Number(e.target.value) });
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    updateObjective({ name: e.target.value });
   };
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex justify-between items-center">
-        <span className="text-sm font-normal truncate">
-          {objective.name}
-        </span>
+      <div className="flex justify-between items-center gap-4">
+        {
+          isEditing ?
+            <input
+              className="text-sm border p-1 rounded h-9 w-full"
+              value={objective.name}
+              onChange={handleNameChange}
+            />
+          : 
+            <span className="text-sm font-normal truncate">
+              {objective.name}
+            </span>
+        }
+
+       
         {isEditing && onDelete && (
           <button
             onClick={() => onDelete(objective.id)}
@@ -37,7 +56,7 @@ export function ObjectiveItem({ objective, onUpdate, onDelete, isEditing }: Obje
             min={0}
             max={100}
             value={objective.progress}
-            onChange={handleChange}
+            onChange={handleProgressChange}
             className="my-1 w-full"
             />
           ) : (
