@@ -1,15 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ProgressCard } from "./components/ProgressCard";
 import { AddGoalModal } from "./components/AddGoalModal";
 import type { Goal } from "./types/Goal";
 
 export default function App() {
-  const [goals, setGoals] = useState<Goal[]>([
-    { id: "1", name: "Learn TypeScript", progress: 40 },
-    { id: "2", name: "Build React Project", progress: 20 },
-  ]);
+  const [goals, setGoals] = useState<Goal[]>(() => {
+    const stored = localStorage.getItem("goals");
+    return stored ? JSON.parse(stored) : [
+      { id: "1", name: "Learn TypeScript", progress: 40 },
+      { id: "2", name: "Build React Project", progress: 20 },
+    ];
+  });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem("goals", JSON.stringify(goals));
+  }, [goals]);
 
   const updateGoal = (id: string, data: Partial<Goal>) => {
     setGoals(prev =>
@@ -18,10 +25,14 @@ export default function App() {
   }
 
   const addGoal = (name: string, progress: number) => {
-    setGoals((prev) => [
+    setGoals(prev => [
       ...prev,
-      { id: crypto.randomUUID(), name, progress },
-    ]);
+      { id: crypto.randomUUID(), name, progress }
+    ])
+  }
+
+  const deleteGoal = (id: string) => {
+    setGoals(prev => prev.filter(goal => goal.id !== id));
   };
 
   return (
@@ -31,19 +42,19 @@ export default function App() {
       </header>
 
       <main className="p-4 flex flex-col gap-3">
-        {goals.map((goal) => (
+        {goals.map(goal => (
           <ProgressCard
             key={goal.id}
             goal={goal}
-            onDelete={() =>
-              setGoals(goals.filter((g) => g.id !== goal.id))
-            }
+            onDelete={deleteGoal}
             onUpdate={updateGoal}
           />
         ))}
 
         {goals.length === 0 && (
-          <p className="text-gray-500 text-center mt-10">No goals yet. Add one!</p>
+          <p className="text-gray-500 text-center mt-10">
+            No goals yet. Add one!
+          </p>
         )}
       </main>
 
