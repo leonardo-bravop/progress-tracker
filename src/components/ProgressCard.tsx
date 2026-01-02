@@ -122,7 +122,18 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
       </div>
 
       <div className="mt-4">
-        <h4 className="mb-4">Items</h4>
+        <div className="flex gap-2 justify-between">
+          <h4 className="mb-4">Items</h4>
+
+          {editing && (
+            <button
+              onClick={addObjective}
+              className="mb-3 text-xs px-2 py-1 border rounded hover:bg-gray-100 align-top"
+            >
+              Add Item
+            </button>
+          )}
+        </div>
 
         <div className="flex flex-col gap-2">
           {objectives.map(obj => (
