@@ -1,8 +1,4 @@
-export type Objective = {
-  id: string;
-  name: string;
-  progress: number;
-};
+import type { Objective } from "./Objective";
 
 export type Goal = {
   id: string;

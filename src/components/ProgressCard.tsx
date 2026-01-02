@@ -1,11 +1,17 @@
 import { useState } from "react";
 import type { Goal } from "../types/Goal";
 import { calculateGoalProgress } from "../utils/progress";
+import { ObjectiveItem } from "./ObjectiveItem";
 
 type ProgressCardProps = {
   goal: Goal;
   onDelete?: (id: string) => void;
   onUpdate: (id: string, data: Partial<Goal>) => void;
+  onObjectiveUpdate: (
+    goalId: string,
+    objectiveId: string,
+    progress: number
+  ) => void;
 };
 
 const progressColor = (progress: number) => {
@@ -16,7 +22,7 @@ const progressColor = (progress: number) => {
   else return "bg-green-600";
 };
 
-export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
+export function ProgressCard({ goal, onDelete, onUpdate, onObjectiveUpdate }: ProgressCardProps) {
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(goal.name);
 
@@ -61,6 +67,22 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
         >
           Edit
         </button>
+      </div>
+
+      <div className="mt-4">
+        <h4 className="mb-4">Items</h4>
+
+        <div className="flex flex-col gap-2">
+          {goal.objectives.map(obj => (
+          <ObjectiveItem
+            key={obj.id}
+            objective={obj}
+            onUpdate={(id, progress) =>
+              onObjectiveUpdate(goal.id, id, progress)
+            }
+          />
+        ))}
+        </div>
       </div>
     </>
   );
