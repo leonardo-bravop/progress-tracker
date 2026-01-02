@@ -7,22 +7,39 @@ type ProgressCardProps = {
   goal: Goal;
   onDelete?: (id: string) => void;
   onUpdate: (id: string, data: Partial<Goal>) => void;
-  onObjectiveUpdate: (
-    goalId: string,
-    objectiveId: string,
-    progress: number
-  ) => void;
 };
 
-export function ProgressCard({ goal, onDelete, onUpdate, onObjectiveUpdate }: ProgressCardProps) {
+export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(goal.name);
+  const [objectives, setObjectives] = useState(goal.objectives);
 
-  const toggleEdit = () => setEditing(!editing);
+  const startEdit = () => {
+    setEditing(true);
+  };
+
+  const cancelEdit = () => {
+    setObjectives(goal.objectives);
+    setName(goal.name);
+    setEditing(false);
+  };
 
   const handleSave = () => {
-    onUpdate(goal.id, { name });
-    toggleEdit();
+    onUpdate(goal.id, { name, objectives });
+    setEditing(false);
+  };
+
+  const updateObjective = (
+    objectiveId: string,
+    progress: number
+  ) => {
+    setObjectives(prev =>
+      prev.map(obj => {
+       const isTargetObj = obj.id === objectiveId;
+          if (!isTargetObj) return obj;
+          return { ...obj, progress };
+      })
+    );
   };
 
   const progress = calculateGoalProgress(goal.objectives);
@@ -67,7 +84,7 @@ export function ProgressCard({ goal, onDelete, onUpdate, onObjectiveUpdate }: Pr
              <div className="flex gap-2">
               <button
                 className="px-2 py-1 text-xs border rounded hover:bg-gray-100"
-                onClick={toggleEdit}
+                onClick={cancelEdit}
               >
                 Cancel
               </button>
@@ -81,7 +98,7 @@ export function ProgressCard({ goal, onDelete, onUpdate, onObjectiveUpdate }: Pr
             </div>
           ) : 
             <button
-              onClick={toggleEdit}
+              onClick={startEdit}
               className="text-xs px-2 py-1 border rounded hover:bg-gray-100"
             >
               Edit
@@ -93,13 +110,11 @@ export function ProgressCard({ goal, onDelete, onUpdate, onObjectiveUpdate }: Pr
         <h4 className="mb-4">Items</h4>
 
         <div className="flex flex-col gap-2">
-          {goal.objectives.map(obj => (
+          {objectives.map(obj => (
             <ObjectiveItem
               key={obj.id}
               objective={obj}
-              onUpdate={(id, progress) =>
-                onObjectiveUpdate(goal.id, id, progress)
-              }
+              onUpdate={(id, progress) => updateObjective(id, progress)}
               isEditing={editing}
             />
           ))}

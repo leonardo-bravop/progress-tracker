@@ -42,28 +42,6 @@ export default function App() {
     localStorage.setItem("goals", JSON.stringify(goals));
   }, [goals]);
 
-  const updateObjective = (
-    goalId: string,
-    objectiveId: string,
-    progress: number
-  ) => {
-    setGoals(prev =>
-      prev.map(goal => {
-        const isTargetGoal = goal.id === goalId;
-        if (!isTargetGoal) return goal;
-
-        const updatedObjectives = goal.objectives.map(obj => {
-          const isTargetObj = obj.id === objectiveId;
-          if (!isTargetObj) return obj;
-          return { ...obj, progress };
-        });
-
-        const updatedGoal = { ...goal, objectives: updatedObjectives };
-        return updatedGoal;
-      })
-    );
-  };
-
   const updateGoal = (id: string, data: Partial<Goal>) => {
     setGoals(prev =>
       prev.map(goal => goal.id === id ? { ...goal, ...data } : goal)
@@ -101,7 +79,6 @@ export default function App() {
             goal={goal}
             onDelete={deleteGoal}
             onUpdate={updateGoal}
-            onObjectiveUpdate={updateObjective}
           />
         ))}
 
