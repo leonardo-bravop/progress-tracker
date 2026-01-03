@@ -72,7 +72,7 @@ export default function App() {
         <h1 className="text-2xl font-bold">Progress Tracker</h1>
       </header>
 
-      <main className="p-4 flex flex-col gap-3">
+      <main className="p-4 flex flex-col gap-3 pb-20">
         {goals.map(goal => (
           <ProgressCard
             key={goal.id}
