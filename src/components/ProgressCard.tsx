@@ -62,7 +62,7 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
 
   const ViewMode = (
     <>
-      <div className="flex justify-between items-center h-9 gap-2">
+      <div className="flex justify-between items-center h-9 gap-3">
         {
           editing ?
             <input
@@ -73,10 +73,10 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
           : <h3 className="font-medium text-lg truncate">{goal.name}</h3>
         }
 
-        {onDelete && (
+        {editing && onDelete && (
             <button
               onClick={() => onDelete(goal.id)}
-              className="hover:text-red-700 text-lg leading-none"
+              className="text-red-600 hover:text-red-700 text-lg leading-none"
             >
               ✕
             </button>
