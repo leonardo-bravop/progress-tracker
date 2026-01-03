@@ -55,14 +55,20 @@ export function AddGoalModal({ isOpen, onClose, onAdd }: AddGoalModalProps) {
           <button
             type="button"
             onClick={onClose}
-            className="px-3 py-1 border rounded text-gray-600"
+            className="
+              px-3 py-1 border border-gray-300 rounded text-black
+              bg-gray-100 hover:bg-gray-200 cursor-pointer
+            "
           >
             Cancel
           </button>
 
           <button
             type="submit"
-            className="px-3 py-1 bg-blue-600 text-white rounded"
+            className="
+              px-3 py-1 bg-blue-600 text-white rounded cursor-pointer
+              hover:bg-blue-700
+            "
           >
             Add
           </button>

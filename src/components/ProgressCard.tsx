@@ -99,7 +99,7 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
           editing ? (
              <div className="flex gap-2">
               <button
-                className="px-2 py-1 text-xs border rounded hover:bg-gray-100"
+                className="px-2 py-1 text-xs text-black border border-gray-300 rounded bg-gray-100 hover:bg-gray-200"
                 onClick={cancelEdit}
               >
                 Cancel
@@ -115,7 +115,7 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
           ) : 
             <button
               onClick={startEdit}
-              className="text-xs px-2 py-1 border rounded hover:bg-gray-100"
+              className="text-xs px-2 py-1 text-black border border-gray-300 rounded bg-gray-100 hover:bg-gray-200"
             >
               Edit
             </button>
@@ -129,7 +129,7 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
           {editing && (
             <button
               onClick={addObjective}
-              className="mb-3 text-xs px-2 py-1 border rounded hover:bg-gray-100 align-top"
+              className="mb-3 text-xs px-2 py-1 border border-gray-300 rounded bg-gray-100 hover:bg-gray-200 align-top"
             >
               Add Item
             </button>
