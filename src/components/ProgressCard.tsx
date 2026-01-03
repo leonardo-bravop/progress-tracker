@@ -12,11 +12,17 @@ type ProgressCardProps = {
 
 export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
   const [editing, setEditing] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const [name, setName] = useState(goal.name);
   const [objectives, setObjectives] = useState(goal.objectives);
 
+  const toggleCollapse = () => {
+    setCollapsed(prev => !prev);
+  };
+
   const startEdit = () => {
     setEditing(true);
+    setCollapsed(false);
   };
 
   const cancelEdit = () => {
@@ -124,7 +130,18 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
 
       <div className="mt-4">
         <div className="flex gap-2 justify-between">
-          <h4 className="mb-4">Items</h4>
+          <div className="flex gap-2 mb-4">
+            <h4>Items ({objectives.length})</h4>
+
+            <button 
+              className="
+                text-xs px-2 py-1 text-black border border-gray-300 rounded bg-gray-100 hover:bg-gray-200
+              " 
+              onClick={toggleCollapse}
+            >
+              {collapsed ? 'Show' : 'Hide'}
+            </button>
+          </div>
 
           {editing && (
             <button
@@ -137,7 +154,7 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
         </div>
 
         <div className="flex flex-col gap-4">
-          {objectives.map(obj => (
+          {!collapsed && objectives.map(obj => (
             <ObjectiveItem
               key={obj.id}
               objective={obj}
