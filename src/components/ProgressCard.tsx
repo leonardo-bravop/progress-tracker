@@ -50,6 +50,9 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
   };
 
   const addObjective = () => {
+    setCollapsed(false);
+    setEditing(true);
+
     setObjectives(prev => [
       ...prev,
       {
@@ -133,17 +136,20 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
           <div className="flex gap-2 mb-4">
             <h4>Items ({objectives.length})</h4>
 
-            <button 
-              className="
-                text-xs px-2 py-1 text-black border border-gray-300 rounded bg-gray-100 hover:bg-gray-200 cursor-pointer
-              " 
-              onClick={toggleCollapse}
-            >
-              {collapsed ? 'Show' : 'Hide'}
-            </button>
+            {
+              objectives.length > 0 &&
+                (<button 
+                  className="
+                    text-xs px-2 py-1 text-black border border-gray-300 rounded bg-gray-100 hover:bg-gray-200 cursor-pointer
+                  " 
+                  onClick={toggleCollapse}
+                >
+                  {collapsed ? 'Show' : 'Hide'}
+                </button>)
+            }
           </div>
 
-          {editing && (
+          {true && (
             <button
               onClick={addObjective}
               className="mb-3 text-xs px-2 py-1 border border-gray-300 rounded bg-gray-100 hover:bg-gray-200 align-top cursor-pointer"
