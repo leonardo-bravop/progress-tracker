@@ -6,34 +6,7 @@ import type { Goal } from "./types/Goal";
 export default function App() {
   const [goals, setGoals] = useState<Goal[]>(() => {
     const stored = localStorage.getItem("goals");
-
-    return stored ? JSON.parse(stored) : [
-      {
-        id: "1",
-        name: "Learn TypeScript",
-        objectives: [{
-          id: crypto.randomUUID(),
-          name: "Objective 1.1",
-          progress: 50
-        }]
-      },
-      { 
-        id: "2",
-        name: "Build React Project",
-        objectives: [
-          {
-            id: crypto.randomUUID(),
-            name: "Objective 2.1",
-            progress: 85
-          },
-          {
-            id: crypto.randomUUID(),
-            name: "Objective 2.2",
-            progress: 95
-          }
-        ]
-      },
-    ];
+    return stored ? JSON.parse(stored) : [];
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
