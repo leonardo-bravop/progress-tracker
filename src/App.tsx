@@ -42,7 +42,7 @@ export default function App() {
         <h1 className="text-2xl font-bold">Progress Tracker</h1>
       </header>
 
-      <main className="p-4 grid gap-3 pb-20" style={{grid: "auto-flow / repeat(auto-fill, minmax(320px, 1fr))"}}>
+      <main className="p-4 grid gap-3 pb-20 flex-1" style={{grid: goals.length ? "auto-flow / repeat(auto-fill, minmax(320px, 1fr))" : "none"}}>
         {goals.map(goal => (
           <ProgressCard
             key={goal.id}
@@ -51,13 +51,14 @@ export default function App() {
             onUpdate={updateGoal}
           />
         ))}
-      </main>
 
-      {goals.length === 0 && (
-        <p className="text-gray-500 text-center mt-10">
-          No goals yet. Add one!
-        </p>
-      )}
+        {
+          goals.length === 0 && (
+          <p className="text-gray-500 text-center my-auto">
+            No goals yet. Add one!
+          </p>
+        )}
+      </main>      
 
       <button
         onClick={() => setIsModalOpen(true)}
