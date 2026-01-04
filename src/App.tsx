@@ -38,7 +38,7 @@ export default function App() {
         <h1 className="text-2xl font-bold">Progress Tracker</h1>
       </header>
 
-      <main className="p-4 grid gap-3 pb-20 flex-1" style={{grid: goals.length ? "auto-flow / repeat(auto-fill, minmax(320px, 1fr))" : "none"}}>
+      <main className={`p-4 grid gap-3 pb-20 ${goals.length ? "" : "flex-1"}`} style={{grid: goals.length ? "auto-flow / repeat(auto-fill, minmax(320px, 1fr))" : "none"}}>
         {goals.map(goal => (
           <ProgressCard
             key={goal.id}
