@@ -64,7 +64,7 @@ export default function App() {
         onClick={() => setIsModalOpen(true)}
         className="
           fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white
-          px-4 py-2 rounded-full shadow-lg text-lg
+          px-4 py-2 rounded-full shadow-lg text-lg cursor-pointer
         "
       >
         + Add Goal

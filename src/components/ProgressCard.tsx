@@ -82,7 +82,7 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
         {editing && onDelete && (
             <button
               onClick={() => onDelete(goal.id)}
-              className="text-red-600 hover:text-red-700 text-lg leading-none"
+              className="text-red-600 hover:text-red-700 text-lg leading-none cursor-pointer"
             >
               ✕
             </button>
@@ -105,14 +105,14 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
           editing ? (
              <div className="flex gap-2">
               <button
-                className="px-2 py-1 text-xs text-black border border-gray-300 rounded bg-gray-100 hover:bg-gray-200"
+                className="px-2 py-1 text-xs text-black border border-gray-300 rounded bg-gray-100 hover:bg-gray-200 cursor-pointer"
                 onClick={cancelEdit}
               >
                 Cancel
               </button>
 
               <button
-                className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
+                className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer"
                 onClick={handleSave}
               >
                 Save
@@ -121,7 +121,7 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
           ) : 
             <button
               onClick={startEdit}
-              className="text-xs px-2 py-1 text-black border border-gray-300 rounded bg-gray-100 hover:bg-gray-200"
+              className="text-xs px-2 py-1 text-black border border-gray-300 rounded bg-gray-100 hover:bg-gray-200 cursor-pointer"
             >
               Edit
             </button>
@@ -135,7 +135,7 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
 
             <button 
               className="
-                text-xs px-2 py-1 text-black border border-gray-300 rounded bg-gray-100 hover:bg-gray-200
+                text-xs px-2 py-1 text-black border border-gray-300 rounded bg-gray-100 hover:bg-gray-200 cursor-pointer
               " 
               onClick={toggleCollapse}
             >
@@ -146,7 +146,7 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
           {editing && (
             <button
               onClick={addObjective}
-              className="mb-3 text-xs px-2 py-1 border border-gray-300 rounded bg-gray-100 hover:bg-gray-200 align-top"
+              className="mb-3 text-xs px-2 py-1 border border-gray-300 rounded bg-gray-100 hover:bg-gray-200 align-top cursor-pointer"
             >
               Add Item
             </button>
