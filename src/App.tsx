@@ -24,13 +24,10 @@ export default function App() {
   const addGoal = (name: string) => {
     setGoals(prev => [
       ...prev,
-      { id: crypto.randomUUID(),
+      {
+        id: crypto.randomUUID(),
         name,
-        objectives: [{
-          id: crypto.randomUUID(),
-          name: "Objective 1",
-          progress: 50
-        }]
+        objectives: []
       }
     ])
   }
