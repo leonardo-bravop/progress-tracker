@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Goal } from "../types/Goal";
 import { calculateGoalProgress, progressColor } from "../utils/progress";
 import { ObjectiveItem } from "./ObjectiveItem";
@@ -15,6 +15,7 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
   const [collapsed, setCollapsed] = useState(true);
   const [name, setName] = useState(goal.name);
   const [objectives, setObjectives] = useState(goal.objectives);
+  const [progress, setProgress] = useState(0);
 
   const toggleCollapse = () => {
     setCollapsed(prev => !prev);
@@ -67,8 +68,10 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
     setObjectives(prev => prev.filter(obj => obj.id !== id));
   };
 
-  const progress = calculateGoalProgress(goal.objectives);
-
+  useEffect(() => {
+    setProgress(calculateGoalProgress(objectives));
+  }, [objectives]);
+  
   const ViewMode = (
     <>
       <div className="flex justify-between items-center h-9 gap-3">
