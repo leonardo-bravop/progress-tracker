@@ -1,24 +1,66 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { calculateGoalProgress, progressColor } from "../utils/progress";
+import type { Objective } from "../types/Objective";
+import { ObjectiveItem } from "./ObjectiveItem";
+import type { Goal } from "../types/Goal";
 
 type AddGoalModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  onAdd: (name: string, progress: number) => void;
+  onAdd: (goal: Goal) => void;
 };
 
 export function AddGoalModal({ isOpen, onClose, onAdd }: AddGoalModalProps) {
   const [name, setName] = useState("");
   const [progress, setProgress] = useState(0);
+  const [objectives, setObjectives] = useState<Objective[]>([]);
+
+  useEffect(() => {
+    setProgress(calculateGoalProgress(objectives));
+  }, [objectives]);
 
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
-    onAdd(name, progress);
+
+    onAdd({
+      id: crypto.randomUUID(),
+      name,
+      objectives
+    });
+
     setName("");
-    setProgress(0);
+    setObjectives([]);
     onClose();
+  };
+
+  const updateObjective = (
+    objectiveId: string,
+    data: Partial<Objective>
+  ) => {
+    setObjectives(prev => prev.map(obj => {
+       const isTargetObj = obj.id === objectiveId;
+          if (!isTargetObj) return obj;
+          return { ...obj, ...data };
+      })
+    )
+  };
+
+  const addObjective = () => {
+    setObjectives(prev => [
+      ...prev,
+      {
+        id: crypto.randomUUID(),
+        name: `Objective ${prev.length + 1}`,
+        progress: 0,
+      },
+    ]);
+  };
+
+  const deleteObjective = (id: string) => {
+    setObjectives(prev => prev.filter(obj => obj.id !== id));
   };
 
   return (
@@ -30,25 +72,59 @@ export function AddGoalModal({ isOpen, onClose, onAdd }: AddGoalModalProps) {
         <h2 className="text-xl font-bold">Add New Goal</h2>
 
         <div className="flex flex-col gap-2">
-          <label className="text-sm">Name</label>
-          <input
-            className="border p-2 rounded"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Learn React"
-          />
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <label className="text-sm">Progress ({progress}%)</label>
-          <input
-            type="range"
-            min={0}
-            max={100}
-            value={progress}
-            onChange={(e) => setProgress(Number(e.target.value))}
-            disabled
-          />
+          <>
+            <div className="flex justify-between items-center h-9 gap-3">
+                <label className="text-sm">Name*</label>
+                <input
+                  required
+                  className="border p-1 rounded h-9 w-full"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Enter goal name"
+                />
+            </div>
+      
+            <div className="my-2 h-2 bg-gray-200 rounded">
+              <div
+                className={`h-full ${progressColor(progress)} rounded transition-all`}
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+      
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">
+                {progress}% complete
+              </span>
+            </div>
+      
+            <div className="mt-4">
+              <div className="flex gap-2 justify-between">
+                <div className="flex gap-2 mb-4">
+                  <h4>Items ({objectives.length})</h4>
+                </div>
+      
+                <button
+                  type="button"
+                  onClick={addObjective}
+                  className="mb-3 text-xs px-2 py-1 border border-gray-300 rounded bg-gray-100 hover:bg-gray-200 align-top cursor-pointer"
+                >
+                  Add Item
+                </button>
+              </div>
+      
+              <div className="flex flex-col gap-4 max-h-55 overflow-y-scroll pr-4">
+                {objectives.map(obj => (
+                  <ObjectiveItem
+                    key={obj.id}
+                    objective={obj}
+                    onUpdate={updateObjective}
+                    onDelete={deleteObjective}
+                    isEditing={true}
+                  />
+                ))}
+              </div>
+            </div>
+          </>
         </div>
 
         <div className="flex justify-end gap-2">

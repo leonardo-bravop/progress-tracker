@@ -82,7 +82,7 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
           : <h3 className="font-medium text-lg truncate">{goal.name}</h3>
         }
 
-        {editing && onDelete && (
+        {onDelete && (
             <button
               onClick={() => onDelete(goal.id)}
               className="text-red-600 hover:text-red-700 text-lg leading-none cursor-pointer"

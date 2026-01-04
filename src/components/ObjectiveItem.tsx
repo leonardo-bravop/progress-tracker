@@ -40,6 +40,7 @@ export function ObjectiveItem({ objective, onUpdate, onDelete, isEditing }: Obje
        
         {isEditing && onDelete && (
           <button
+            type="button"
             onClick={() => onDelete(objective.id)}
             className="text-sm text-red-600 hover:text-red-800 cursor-pointer"
           >
