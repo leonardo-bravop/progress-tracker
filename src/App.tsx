@@ -2,6 +2,17 @@ import { useState, useEffect } from "react";
 import { ProgressCard } from "./components/ProgressCard";
 import { AddGoalModal } from "./components/AddGoalModal";
 import type { Goal } from "./types/Goal";
+import { ConfirmModal } from "./components/ConfirmModal";
+
+type ModalState =
+  | {
+      type: "confirm";
+      title: string;
+      message?: string;
+      onConfirm: () => void;
+    }
+  | { type: "add-goal" }
+  | null;
 
 export default function App() {
   const [goals, setGoals] = useState<Goal[]>(() => {
@@ -9,7 +20,7 @@ export default function App() {
     return stored ? JSON.parse(stored) : [];
   });
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modal, setModal] = useState<ModalState>(null);
 
   useEffect(() => {
     localStorage.setItem("goals", JSON.stringify(goals));
@@ -22,6 +33,8 @@ export default function App() {
   }
 
   const addGoal = (goal: Goal) => {
+    setModal({ type: "add-goal" });
+
     setGoals(prev => [
       ...prev,
       goal
@@ -31,6 +44,7 @@ export default function App() {
   const deleteGoal = (id: string) => {
     setGoals(prev => prev.filter(goal => goal.id !== id));
   };
+  
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 flex flex-col">
@@ -43,7 +57,17 @@ export default function App() {
           <ProgressCard
             key={goal.id}
             goal={goal}
-            onDelete={deleteGoal}
+            onDelete={() =>
+              setModal({
+                type: "confirm",
+                title: "Delete goal?",
+                message: "This will permanently delete the goal and all objectives.",
+                onConfirm: () => {
+                  deleteGoal(goal.id);
+                  setModal(null);
+                },
+              })
+            }
             onUpdate={updateGoal}
           />
         ))}
@@ -57,7 +81,7 @@ export default function App() {
       </main>      
 
       <button
-        onClick={() => setIsModalOpen(true)}
+        onClick={() => setModal({ type: "add-goal" })}
         className="
           fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white
           px-4 py-2 rounded-full shadow-lg text-lg cursor-pointer
@@ -66,11 +90,21 @@ export default function App() {
         + Add Goal
       </button>
 
-      <AddGoalModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onAdd={addGoal}
-      />
+      {modal?.type === "add-goal" && (
+        <AddGoalModal
+          onClose={() => setModal(null)}
+          onAdd={addGoal}
+        />
+      )}
+
+      {modal?.type === "confirm" && (
+        <ConfirmModal
+          title={modal.title}
+          message={modal.message ?? ""}
+          onCancel={() => setModal(null)}
+          onConfirm={modal.onConfirm}
+        />
+      )}
     </div>
   );
 }

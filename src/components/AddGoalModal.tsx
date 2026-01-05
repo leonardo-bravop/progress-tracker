@@ -5,12 +5,11 @@ import { ObjectiveItem } from "./ObjectiveItem";
 import type { Goal } from "../types/Goal";
 
 type AddGoalModalProps = {
-  isOpen: boolean;
   onClose: () => void;
   onAdd: (goal: Goal) => void;
 };
 
-export function AddGoalModal({ isOpen, onClose, onAdd }: AddGoalModalProps) {
+export function AddGoalModal({ onClose, onAdd }: AddGoalModalProps) {
   const [name, setName] = useState("");
   const [progress, setProgress] = useState(0);
   const [objectives, setObjectives] = useState<Objective[]>([]);
@@ -18,8 +17,6 @@ export function AddGoalModal({ isOpen, onClose, onAdd }: AddGoalModalProps) {
   useEffect(() => {
     setProgress(calculateGoalProgress(objectives));
   }, [objectives]);
-
-  if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
