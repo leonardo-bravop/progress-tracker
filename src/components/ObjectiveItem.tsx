@@ -1,5 +1,7 @@
 import type { Objective } from "../types/Objective";
 import { progressColor } from "../utils/progress";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 type ObjectiveItemProps = {
   objective: Objective;
@@ -40,11 +42,10 @@ export function ObjectiveItem({ objective, onUpdate, onDelete, isEditing }: Obje
        
         {isEditing && onDelete && (
           <button
-            type="button"
             onClick={() => onDelete(objective.id)}
-            className="text-sm text-red-600 hover:text-red-800 cursor-pointer"
+            className="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
           >
-            ✕
+            <FontAwesomeIcon icon={faTrash} />
           </button>
         )}
       </div>

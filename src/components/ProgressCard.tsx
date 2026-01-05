@@ -3,6 +3,9 @@ import type { Goal } from "../types/Goal";
 import { calculateGoalProgress, progressColor } from "../utils/progress";
 import { ObjectiveItem } from "./ObjectiveItem";
 import type { Objective } from "../types/Objective";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash, faPencil, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 type ProgressCardProps = {
   goal: Goal;
@@ -11,7 +14,8 @@ type ProgressCardProps = {
 };
 
 export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
-  const [editing, setEditing] = useState(false);
+  const [editingObjectives, setEditingObjectives] = useState(false);
+  const [editingName, setEditingName] = useState(false);
   const [collapsed, setCollapsed] = useState(true);
   const [name, setName] = useState(goal.name);
   const [objectives, setObjectives] = useState(goal.objectives);
@@ -21,20 +25,26 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
     setCollapsed(prev => !prev);
   };
 
-  const startEdit = () => {
-    setEditing(true);
-    setCollapsed(false);
+  const startEdit = (editType: 'name' | 'objectives') => {
+    if (editType === 'name') {
+      setEditingName(true);
+    } else {
+      setEditingObjectives(true);
+      setCollapsed(false);
+    }
   };
 
   const cancelEdit = () => {
+    setEditingName(false);
+    setEditingObjectives(false);
     setObjectives(goal.objectives);
     setName(goal.name);
-    setEditing(false);
   };
 
   const handleSave = () => {
     onUpdate(goal.id, { name, objectives });
-    setEditing(false);
+    setEditingName(false);
+    setEditingObjectives(false);
   };
 
   const updateObjective = (
@@ -52,7 +62,7 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
 
   const addObjective = () => {
     setCollapsed(false);
-    setEditing(true);
+    setEditingObjectives(true);
 
     setObjectives(prev => [
       ...prev,
@@ -76,7 +86,7 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
     <>
       <div className="flex justify-between items-center h-9 gap-3">
         {
-          editing ?
+          editingName ?
             <input
               className="border p-1 rounded h-9 w-full"
               value={name}
@@ -85,14 +95,25 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
           : <h3 className="font-medium text-lg truncate">{goal.name}</h3>
         }
 
-        {onDelete && (
+        <div className="flex gap-2">
+          {!editingName &&
+            <button
+              onClick={() => startEdit('name')}
+              className="text-gray-600 hover:text-gray-900 cursor-pointer"
+            >
+              <FontAwesomeIcon icon={faPencil} />
+            </button>
+          }
+          
+          {onDelete &&
             <button
               onClick={() => onDelete(goal.id)}
-              className="text-red-600 hover:text-red-700 text-lg leading-none cursor-pointer"
+              className="text-gray-600 hover:text-gray-900 cursor-pointer"
             >
-              ✕
+              <FontAwesomeIcon icon={faTrash} />
             </button>
-          )}
+          }
+        </div>
       </div>
 
       <div className="my-2 h-2 bg-gray-200 rounded">
@@ -103,16 +124,16 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
       </div>
 
       <div className="flex justify-between">
-        <span className="text-sm text-gray-600">
+        <span className="text-sm text-gray-600 pb-1.5">
           {progress}% complete
         </span>
 
         {
-          editing ? (
+          (editingName || editingObjectives) && (
              <div className="flex gap-2">
               <button
                 className="px-2 py-1 text-xs text-black border border-gray-300 rounded bg-gray-100 hover:bg-gray-200 cursor-pointer"
-                onClick={cancelEdit}
+                onClick={() => cancelEdit()}
               >
                 Cancel
               </button>
@@ -124,42 +145,39 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
                 Save
               </button>
             </div>
-          ) : 
-            <button
-              onClick={startEdit}
-              className="text-xs px-2 py-1 text-black border border-gray-300 rounded bg-gray-100 hover:bg-gray-200 cursor-pointer"
-            >
-              Edit
-            </button>
+          )
         }
       </div>
 
       <div className="mt-4">
-        <div className="flex gap-2 justify-between">
-          <div className="flex gap-2 mb-4">
-            <h4>Items ({objectives.length})</h4>
-
-            {
+        <div className="flex gap-2 justify-between items-center mb-4">
+          <h4>Items ({objectives.length})</h4>
+          <div className="flex gap-2">
+             {
               objectives.length > 0 &&
-                (<button 
-                  className="
-                    text-xs px-2 py-1 text-black border border-gray-300 rounded bg-gray-100 hover:bg-gray-200 cursor-pointer
-                  " 
+                <button 
+                  className="text-gray-600 hover:text-gray-900 cursor-pointer" 
                   onClick={toggleCollapse}
                 >
-                  {collapsed ? 'Show' : 'Hide'}
-                </button>)
+                  {collapsed ? <FontAwesomeIcon icon={faEye} /> : <FontAwesomeIcon icon={faEyeSlash} />}
+                </button>
             }
-          </div>
-
-          {true && (
+            {
+              !editingObjectives &&
+                <button
+                  onClick={() => startEdit('objectives')}
+                  className="text-gray-600 hover:text-gray-900 cursor-pointer"
+                >
+                  <FontAwesomeIcon icon={faPencil} />
+                </button>
+            }
             <button
               onClick={addObjective}
-              className="mb-3 text-xs px-2 py-1 border border-gray-300 rounded bg-gray-100 hover:bg-gray-200 align-top cursor-pointer"
+              className="text-gray-600 hover:text-gray-900 cursor-pointer"
             >
-              Add Item
+              <FontAwesomeIcon icon={faPlus} />
             </button>
-          )}
+          </div>
         </div>
 
         <div className="flex flex-col gap-4">
@@ -169,7 +187,7 @@ export function ProgressCard({ goal, onDelete, onUpdate }: ProgressCardProps) {
               objective={obj}
               onUpdate={updateObjective}
               onDelete={deleteObjective}
-              isEditing={editing}
+              isEditing={editingObjectives}
             />
           ))}
         </div>
